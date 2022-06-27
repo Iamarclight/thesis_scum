@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #red {
+            width: 40%;
+            background-color: red;
+            justify-content: center;
+            height: 200px;
+            position: fixed;
+            margin-top:100px;
+        }
+
+        #blue {
+            width: 40%;
+            background-color: blue;
+            display: block;
+            position: fixed;
+        }
+
+        button {
+            float: right;
+        }
+
+        #textb1{
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="blue">putang ina mo <tian></tian></div>
+    <div id="red">
+        gago si tian
+    </div>
+    <button onclick="gago()"> tagna</button>
+    <form method="GET">
+        <label>what?
+            <input id="textb1" type="text">
+            <div id="displayDiv">timer</div>
+        </label>
+        <button type="submit">Submit</button>
+    </form>
+
+<script>
+    function gago(){
+        document.getElementById('blue').remove();
+    }
+
+    const COUNTER_KEY = 'my-counter';
+
+    function countDown(i, callback) {
+      //callback = callback || function(){};
+      timer = setInterval(function() {
+        minutes = parseInt(i / 60, 10);
+        seconds = parseInt(i % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        document.getElementById("displayDiv").innerHTML = "Time (h:min:sec) left for this station is  " + "0:" + minutes + ":" + seconds;
+
+        if ((i--) > 0) {
+          window.sessionStorage.setItem(COUNTER_KEY, i);
+        } else {
+          window.sessionStorage.removeItem(COUNTER_KEY);
+          clearInterval(timer);
+          callback();
+        }
+      }, 1000);
+    }
+
+
+    window.onload = function() {
+      var countDownTime = window.sessionStorage.getItem(COUNTER_KEY) || 60;
+      countDown(countDownTime, function() {
+        $('#myModal').modal('show');
+      });
+    };
+</script>
+</body>
+</html>

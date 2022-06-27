@@ -1,0 +1,737 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %}
+{% block relative_css %}
+    <link rel="stylesheet" href="static\control_panel.css">
+    <link rel="stylesheet" href="static\video_stream.css">
+    <link rel="stylesheet" href="static\rf_details.css">
+    <link rel="stylesheet" href="static\event_log.css">
+    <link rel="stylesheet" href="static\alerts.css">
+    <link rel="stylesheet" href="static\container.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="parent_cont" onload="checkOnLoad()">
+    <div class="row1">
+        <div class="list1">
+            <div id="video">
+                    <div id="vid_cont">
+                        <div id="vf1" class="vfeed">
+                            <img alt="Room 1"  src="" crossorigin="anonymous">
+                        </div>
+                        <div id="vf2" class="vfeed">
+                            <img alt="Room 2" src="" crossorigin="anonymous">
+                        </div>
+                        <div id="vf3" class="vfeed">
+                            <img alt="Room 3" src="" crossorigin="anonymous">
+                        </div>
+                        <div id="vf4" class="vfeed">
+                            <img alt="Room 4" src="" crossorigin="anonymous">
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button onclick="myFunction()" class="dropbtn">Rooms</button>
+                        <div id="myDropdown" class="dropdown-content">
+                            <a onclick="preview(1); feedSize(1)" name="vr1" id="vr1">Room 1</a>
+                            <a onclick="preview(2); feedSize(2)" name="vr2" id="vr2">Room 2</a>
+                            <a onclick="preview(3); feedSize(3)" name="vr3" id="vr3">Room 3</a>
+                            <a onclick="preview(4); feedSize(4)" name="vr4" id="vr4">Room 4</a>
+                            <a onclick="preview(5); feedSize(5)" name="flr1" id="flr1">Floor 1</a>
+                            <a onclick="preview(6); feedSize(6)" name="flr2" id="flr2">Floor 2</a>
+                            <a onclick="preview(7); feedSize(7)" name="all" id="all">All</a>
+                        </div>
+                    </div>       
+            </div>
+            <div id="control_elem">
+                <!--<div id="displayDiv">timer</div>-->
+                <form method="POST" id="control_sec">
+                <div id="control_cont1">
+                    <label class="f1" id="f1r1">
+                        <input class="rclass" type="checkbox" name="r1" id="r1"
+                               oninvalid="this.setCustomValidity(' ')"  >Room 1</input>
+                    </label>
+                     <label class="f1" >
+                        <input class="rclass" type="checkbox" name="r2" id="r2"
+                                oninvalid="this.setCustomValidity(' ')" >Room 2</input>
+                    </label>
+                     <label class="f2">
+                        <input class="rclass" type="checkbox" name="r3" id="r3"
+                               oninvalid="this.setCustomValidity(' ')" >Room 3</input>
+                    </label>
+                     <label class="f2" id="f2r4">
+                        <input class="rclass" type="checkbox" name="r4" id="r4"
+                                oninvalid="this.setCustomValidity(' ')" >Room 4</input>
+                    </label>
+                </div>
+                <div id="control_cont2">
+                    <label class="floor_cont">
+                        <input onchange="check_f1()" name="floor1" id="floor1" type="checkbox">Floor 1
+                    </label>
+                    <label class="floor_cont">
+                        <input onchange="check_f2()" name="floor2" id="floor2" type="checkbox">Floor 2
+                    </label>
+                </div>
+                <ul id="op_sect">
+                    <li>
+                        <div id="control_cont3">
+                        <div onmouseleave="op_leave(document.getElementById('uvlbl1'))" onmouseenter="op_hover(document.getElementById('uvlbl1'))" id="uvli">
+                            <label onmouseleave="op_leave(this)" onmouseenter="op_hover(this)" id="uvlbl1">UV Disinfection</label>
+                            <label class="switch">
+                                <input class="op" type="checkbox" name="uv_s" id="uv_s" onchange="uv_on()" >
+                                <span  id="slider1" class="slider round">
+                                        <span id="sliderchild"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div onmouseleave="op_leave(document.getElementById('uvlbl2'))" onmouseenter="op_hover(document.getElementById('uvlbl2'))" id="uvli1">
+                            <label onmouseleave="op_leave(this)" onmouseenter="op_hover(this)" id="uvlbl2">Air Filtration</label>
+                                <label class="switch">
+                                    <input class="op" type="checkbox" name="air_s" id="air_s" onchange="air_on()" >
+                                    <span id="slider2" class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div id="control_cont4">
+                            <label id="lbl">STATUS</label>
+                            <label id="val">Terminated</label>
+                            <label id="val1">Terminated</label>
+                        </div>
+                    </li>
+                </ul>
+                
+
+                <input type="hidden" id="room_num" name="room_num" required/>
+                <input type="hidden" id="date_now" name="date_now" required/>
+                <input type="hidden" id="time_now" name="time_now" required/>
+                <input type="hidden" id="stat" name="stat" required/>
+                <input type="hidden" id="interval" name="interval" required/>
+
+                <hr style="height: 1px; margin-top: 20px; margin-bottom: 0px; width: 70%;">
+
+                    <div id="time_cont">
+                        <label id="ti_label">Time Interval</label>
+                        <input onkeyup="hms_valuefil(this)" class="uv_timer" type="number" id="h1" name="h1" max="10" min="0" oninvalid="this.setCustomValidity(' ')" value="00" required/>
+                        <p class="colont"> : </p>
+                        <input onkeyup="hms_valuefil(this)"  class="uv_timer" type="number" id="m1" name="m1" max="59" min="0" oninvalid="this.setCustomValidity(' ')" value="00" required/>
+                        <p class="colont"> : </p>
+                        <input onkeyup="hms_valuefil(this)" class="uv_timer" type="number" id="s1" name="s1" max="59" min="0" oninvalid="this.setCustomValidity(' ')" value="00" required/>
+                    </div>
+                
+                <div id="control_cont6">
+                    <button onclick="start_action(); invalidInputs()" type="submit" name="start" id="start">Start</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row2">
+        <div class="list2">
+            <div id="rf_details">
+                <div id="rf_cont">
+                        <div class="rfc" id="rf1"><p class="labels" id="roomnumlbl">Room Number: </p><p id="roomnum" class="labels1">Room#</p></div>
+                        <div class="rfc" id="rf2"><p class="labels" id="floornumlbl">Floor Number: </p><p id="floornum" class="labels1">Floor#</p></div>
+                        <div class="rfc" id="rf3"><p class="labels" id="lastdis1">Last Disinfection: </p><p id="lastdis" class="labels1">Time | Date</p></div>
+                        <div class="rfc" id="rf4"><p class="labels" id="lastfilt1">Last Air Filtration: </p><p id="lastfilt" class="labels1">Time | Date</p></div>
+                </div>
+            </div>
+            <div id="time_sched">
+                <div id="ts_cont">
+                    <div id="tbllbl">Event Log</div>
+                    <table id="log">
+                      <tr>
+                          <th>ID</th>
+                          <th>User ID</th>
+                          <th>UV Disinfection</th>
+                          <th>Air Filtration</th>
+                          <th>Room Number</th>
+                          <th>Time</th>
+                          <th>Time Interval</th>
+                          <th>Action</th>
+                          <th>Date</th>
+                      </tr>
+                        {% for record in user.logs|reverse %}
+                      <tr>
+                          <td>{{ record.id }}</td>
+                          <td>{{ record.user_id }}</td>
+                          <td>{{ record.uv }}</td>
+                          <td>{{ record.air }}</td>
+                          <td>{{ record.room }}</td>
+                          <td id="timef">{{ record.time }}</td>
+                          <td>{{ record.interval }}</td>
+                          <td>{{ record.stat }}</td>
+                          <td>{{ record.date }}</td>
+                      </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script
+    type="text/javascript"
+     src="{{ url_for('static', filename='button_interact.js') }}"
+    >
+</script>
+
+    <script>
+        var i;
+        var tblLog = document.getElementById('log');
+        for (i=1; i < tblLog.rows.length; i++){
+            tblLog.rows[i].cells[5].innerHTML = tblLog.rows[i].cells[5].innerHTML.replace(tblLog.rows[i].cells[5].innerHTML.slice(-6,-3), "");
+        }
+        
+    </script>
+
+    <script>
+    </script>
+
+{% for num in logs %}
+    <script>
+        alert("{{ num.id }}");
+    </script>
+{% endfor %}
+
+{% for rec in user.logs%}
+    <script type="text/javascript">
+        stat_val = "{{ rec.stat }}";
+        last_uv = "{{ rec.uv }}";
+        last_air = "{{ rec.air }}";
+        last_time = "{{ rec.time }}";
+        last_date = "{{ rec.date }}";
+        last_interval = "{{ rec.interval }}";
+        rooms = "{{ rec.room }}";
+
+
+        //alert("uv air " + last_uv + " " + last_air);
+        //alert("date time " + last_date + " " + last_time);
+        
+        if (last_uv == "on"){
+            if (rooms.includes("1") == true){
+                r1_time = last_time;
+                r1_date = last_date;
+            }
+            if (rooms.includes("2") == true){
+                r2_time = last_time;
+                r2_date = last_date;
+            }
+            if (rooms.includes("3") == true){
+                r3_time = last_time;
+                r3_date = last_date;
+            }
+            if (rooms.includes("4") == true){
+                r4_time = last_time;
+                r4_date = last_date;
+            }
+        }
+
+        if (last_air == "on"){
+            if (rooms.includes("1") == true){
+                r1_time1 = last_time;
+                r1_date1 = last_date;
+            }
+            if (rooms.includes("2") == true){
+                r2_time1 = last_time;
+                r2_date1 = last_date;
+            }
+            if (rooms.includes("3") == true){
+                r3_time1 = last_time;
+                r3_date1 = last_date;
+            }
+            if (rooms.includes("4") == true){
+                r4_time1 = last_time;
+                r4_date1 = last_date;
+            }
+        }
+    </script>
+{% endfor %}
+
+
+    <script type = "text/javascript">
+        function status(){
+            preview(1);
+            if (document.getElementById('showa').style.display == "none"){
+                if (stat_val == "Started"){
+                    invalidInputs();
+                    if (window.sessionStorage.getItem('primary-key') != null){
+                        floor1.disabled = true;
+                        floor2.disabled = true;
+                        r1.disabled = true;
+                        r2.disabled = true;
+                        r3.disabled = true;
+                        r4.disabled = true;
+                        document.getElementById('start').innerHTML = "Stop";
+                    }else {
+                        floor1.disabled = false;
+                        floor2.disabled = false;
+                        r1.disabled = false;
+                        r2.disabled = false;
+                        r3.disabled = false;
+                        r4.disabled = false;
+                        document.getElementById('start').innerHTML = "Start";
+                    }
+                }
+            }else if (stat_val == "Stopped"){
+                    floor1.disabled = false;
+                    floor2.disabled = false;
+                    r1.disabled = false;
+                    r2.disabled = false;
+                    r3.disabled = false;
+                    r4.disabled = false;
+                    document.getElementById('start').innerHTML = "Start";                    
+            }else {
+                    document.getElementById('start').innerHTML = "Start";
+            }
+            
+            if ( window.history.replaceState ) {
+                window.history.replaceState( null, null, window.location.href );
+            }
+        }
+
+        function checkOnLoad(){
+            let room_str = rooms.replace(/, /g,"");
+            if (last_uv == "on"){
+                document.getElementById('uv_s').checked = true;
+                if(window.sessionStorage.getItem('primary-key') != 0)
+                    document.getElementById('val').innerHTML = "Running";
+            }
+            if (last_air == "on"){
+                document.getElementById('air_s').checked = true;
+                if(window.sessionStorage.getItem('primary-key') != 0)
+                    document.getElementById('val1').innerHTML = "Running";
+            }
+
+           
+
+
+            for (let i=0; i <= room_str.length; i++){
+                if (room_str.charAt(i) == '1')
+                    r1.checked = true;
+                else if (room_str.charAt(i) == '2')
+                    r2.checked = true;
+                else if (room_str.charAt(i) == '3')
+                    r3.checked = true;
+                else if (room_str.charAt(i) == '4')
+                    r4.checked = true;
+            }
+
+
+            if ( window.history.replaceState ) {
+                window.history.replaceState( null, null, window.location.href );
+            }
+
+            document.getElementById('em').src="http://192.168.0.32:81/stream";
+        }
+
+</script>
+
+<script>
+    function preview(x) {
+        
+        let rnum = document.getElementById('roomnum');
+        let ldis = document.getElementById('lastdis');
+        let lfilt = document.getElementById('lastfilt');
+
+        if (x == 1) {
+            document.getElementById('roomnum').innerHTML = "1";
+            document.getElementById('floornum').innerHTML = "1";
+
+            ldis.innerHTML = r1_time + "  |  " + r1_date;
+            lfilt.innerHTML = r1_time1 + "  |  " + r1_date1;
+
+        } else if (x == 2){
+            document.getElementById('roomnum').innerHTML = "2";
+            document.getElementById('floornum').innerHTML = "1";
+
+            ldis.innerHTML = r2_time + "  |  " + r2_date;
+            lfilt.innerHTML = r2_time1 + "  |  " + r2_date1;
+
+        } else if (x == 3){
+            document.getElementById('roomnum').innerHTML = "3";
+            document.getElementById('floornum').innerHTML = "2";
+
+            ldis.innerHTML = r2_time + "  |  " + r3_date;
+            lfilt.innerHTML = r3_time1 + "  |  " + r3_date1;
+
+        } else if (x == 4){
+            document.getElementById('roomnum').innerHTML = "4";
+            document.getElementById('floornum').innerHTML = "2";
+
+            ldis.innerHTML = r4_time + "  |  " + r4_date;
+            lfilt.innerHTML = r4_time1 + "  |  " + r4_date1;
+        } else if (x == 5){
+            document.getElementById('roomnum').innerHTML = "1 & 2";
+            document.getElementById('floornum').innerHTML = "1";
+
+            ldis.innerHTML = "ROOM 1: [ " + r1_time + " | " + r1_date + " ]";
+            ldis.appendChild(document.createElement("br"));
+            ldis.appendChild(document.createTextNode("ROOM 2: [ " + r2_time + " | " + r2_date + " ]"));
+
+            lfilt.innerHTML = "ROOM 1: [ " + r1_time1 + " | " + r1_date1 + " ]";
+            lfilt.appendChild(document.createElement("br"));
+            lfilt.appendChild(document.createTextNode("ROOM 2: [ " + r2_time1 + " | " + r2_date1 + " ]"));
+
+
+        } else if (x == 6){
+            document.getElementById('roomnum').innerHTML = "3 & 4";
+            document.getElementById('floornum').innerHTML = "2";
+
+            ldis.innerHTML = "ROOM 3: [ " + r3_time + " | " + r3_date + " ]";
+            ldis.appendChild(document.createElement("br"));
+            ldis.innerHTML += "ROOM 4: [ " + r4_time + " | " + r4_date + " ]";
+
+            lfilt.innerHTML = "ROOM 3: [ " + r3_time1 + " | " + r3_date1 + " ]";
+            lfilt.appendChild(document.createElement("br"));
+            lfilt.innerHTML += "ROOM 4: [ " + r4_time1 + " | " + r4_date1 + " ]";
+        } else if (x == 7){
+            document.getElementById('roomnum').innerHTML = "All";
+            document.getElementById('floornum').innerHTML = "All";
+
+            ldis.innerHTML = "ROOM 1: [ " + r1_time + " | " + r1_date + " ]";
+            ldis.appendChild(document.createElement("br"));
+            ldis.innerHTML += "ROOM 2: [ " + r2_time + " | " + r2_date + " ]";
+            ldis.appendChild(document.createElement("br"));
+            ldis.innerHTML += "ROOM 3: [ " + r3_time + " | " + r3_date + " ]";
+            ldis.appendChild(document.createElement("br"));
+            ldis.innerHTML += "ROOM 4: [ " + r4_time + " | " + r4_date + " ]";
+
+            lfilt.innerHTML = "ROOM 1: [ " + r1_time1 + " | " + r1_date1 + " ]";
+            lfilt.appendChild(document.createElement("br"));
+            lfilt.innerHTML += "ROOM 2: [ " + r2_time1 + " | " + r2_date1 + " ]";
+            lfilt.appendChild(document.createElement("br"));
+            lfilt.innerHTML += "ROOM 3: [ " + r3_time1 + " | " + r3_date1 + " ]";
+            lfilt.appendChild(document.createElement("br"));
+            lfilt.innerHTML += "ROOM 4: [ " + r4_time1 + " | " + r4_date1 + " ]";
+        }
+    }
+
+    function check_f1() {
+        var stat1 = document.getElementById("floor1");
+
+        if (stat1.checked == true){
+            document.getElementById("r1").checked = true;
+            document.getElementById("r2").checked = true;
+        } else{
+            document.getElementById("r1").checked = false;
+            document.getElementById("r2").checked = false;
+        }
+    }
+
+    function check_f2(){
+        var stat2 = document.getElementById("floor2");
+
+        if (stat2.checked == true){
+            document.getElementById("r3").checked = true;
+            document.getElementById("r4").checked = true;
+        } else{
+            document.getElementById("r3").checked = false;
+            document.getElementById("r4").checked = false;
+        }
+    }
+
+    function uv_on() {
+        let uv = document.getElementById('uvlbl1');
+        let uv_stat = document.getElementById('uv_s');
+        if (uv_stat.checked == true){
+            uv.style.color = "yellow";
+        }else {
+            uv.style.color = "white";
+         }
+    }
+
+    function air_on() {
+        let uv = document.getElementById('uvlbl2');
+        let uv_stat = document.getElementById('air_s');
+        if (uv_stat.checked == true){
+            uv.style.color = "yellow";
+        }else {
+            uv.style.color = "white";
+         }
+    }
+
+    function op_hover(x) {
+        x.style.color = "yellow";
+    }
+
+    function op_leave(x) {
+        x.style.color = "white";
+        if (document.getElementById('uv_s').checked == true){
+            document.getElementById('uvlbl1').style.color = "yellow";
+        }
+        
+        if (document.getElementById('air_s').checked == true){
+            document.getElementById('uvlbl2').style.color = "yellow";
+        }
+    }
+
+    function loadFailed(errormsg){
+        errormsg.alt = "Failed to load video";
+    }
+
+</script>
+
+<script>
+    function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
+
+</script>
+
+
+<script>
+    function loadFunction() {
+    var rclass = document.getElementsByClassName('rclass');
+    var flag = 0;
+
+    for (let i = 0; i < rclass.length; i++){
+        if (rclass[i].required == true){
+            flag = 1;
+        }
+    }
+
+    if (flag == 0){
+        rclass[0].required = true;
+    }
+
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+}
+
+var countDownTime = 0;
+var timer;
+var int_span;
+
+
+window.onload = function(){
+
+    var time_span = new Date(last_date + " " + last_time);
+            time_span.setHours(time_span.getHours() + parseInt(last_interval.substr(0,1)));
+            time_span.setMinutes(time_span.getMinutes() + parseInt(last_interval.substr(5,6)));
+            time_span.setSeconds(time_span.getSeconds() + parseInt(last_interval.substr(10,11)));
+
+            var target_time = time_span.getTime();
+            var current_time = new Date();
+            var now = current_time.getTime();
+            
+            var time_left = target_time - current_time;
+
+            var hours1 = Math.floor((time_left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes1 = Math.floor((time_left % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds1 = Math.floor((time_left % (1000 * 60)) / 1000);
+
+            alert("time_left = " + hours1 + " : " + minutes1 + " : " + seconds1);
+
+            if (time_left  > 0){
+                var total_seconds = (hours1 * 60 * 60) + (minutes1 * 60) + seconds1;
+                window.sessionStorage.setItem('primary-key',total_seconds);
+                document.getElementById('start').innerHTML = "Stop";
+            }else {
+                window.sessionStorage.setItem('primary-key',0);
+            }
+
+            
+    
+    if (window.sessionStorage.getItem(COUNTER_KEYP) != null){
+        
+        document.getElementById('h1').readOnly = true;
+        document.getElementById('m1').readOnly = true;
+        document.getElementById('s1').readOnly = true;
+
+        if (window.sessionStorage.getItem(COUNTER_KEY2) == 2){
+            h1.value = "00";
+            m1.value = "00";
+            s1.value = "00";
+            document.getElementById('h1').readOnly = false;
+            document.getElementById('m1').readOnly = false;
+            document.getElementById('s1').readOnly = false;
+
+            document.getElementById('start').innerHTML = "Start";
+            window.sessionStorage.removeItem(COUNTER_KEY);
+            window.sessionStorage.removeItem(COUNTER_KEY1);
+            window.sessionStorage.removeItem(COUNTER_KEY2);
+            window.sessionStorage.removeItem(COUNTER_KEYP);
+            return;
+        }
+        countDownTime = window.sessionStorage.getItem(COUNTER_KEYP);
+    }else {
+        countDownTime = parseInt((parseInt(h1.value) * 60 * 60) + (parseInt(m1.value) * 60) + parseInt(s1.value));
+    }
+
+    countDown(countDownTime, function() {
+        $('#myModal').modal('show');
+    });
+};
+
+function countDown(i, callback) { 
+
+timer = setInterval(function() {
+
+var hours = Math.floor((i * 1000 % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+var minutes = Math.floor((i * 1000 % (1000 * 60 * 60)) / (1000 * 60));
+var seconds = Math.floor((i * 1000 % (1000 * 60)) / 1000);
+  
+// Output the result in an element with id="demo"
+h1.value = hours;
+m1.value = minutes;
+s1.value = seconds;
+
+if (hours < 10){
+    h1.value = "0" + hours;
+}
+if (minutes < 10){
+    m1.value = "0" + minutes;
+}
+if (seconds < 10){
+    s1.value = "0" + seconds;
+}
+
+
+if ((i--) > 0) {
+    window.sessionStorage.setItem(COUNTER_KEYP, i);
+} else {
+
+    document.getElementById('floor1').disabled = false;
+    document.getElementById('floor2').disabled = false;
+    document.getElementById('r1').disabled = false;
+    document.getElementById('r2').disabled = false;
+    document.getElementById('r3').disabled = false;
+    document.getElementById('r4').disabled = false;
+    document.getElementById('h1').readOnly = false;
+    document.getElementById('m1').readOnly = false;
+    document.getElementById('s1').readOnly = false;
+    window.sessionStorage.removeItem(COUNTER_KEY);
+    window.sessionStorage.removeItem(COUNTER_KEYP);
+    
+    document.getElementById('h1').value = "00";
+    document.getElementById('m1').value = "00";
+    document.getElementById('s1').value = "00";
+
+    if (document.getElementById('uv_s').checked == true){
+        document.getElementById('val').innerHTML = "Terminated";
+    }
+    if (document.getElementById('air_s').checked == true){
+        document.getElementById('val1').innerHTML = "Terminated";
+    }
+    document.getElementById('start').innerHTML = "Start";
+    clearInterval(timer);
+    callback();
+    
+}
+}, 1000);
+}
+</script>
+
+
+
+<script>
+    function feedSize(y){
+        var i;
+        var vidFeed = document.getElementsByClassName("vfeed");
+
+            for(i = 0; i < 4; i++){
+                if (i == y - 1){
+                    vidFeed[i].style.width = "100%";
+                    vidFeed[i].style.height = "100%";
+                    vidFeed[i].style.display = "block";
+                    vidFeed[i].style.borderRadius = "10px";
+                    continue;
+                }else if (y == 5  & i < 2){
+                    vidFeed[i].style.display = "block";
+                    vidFeed[i].style.width = "50%";
+                    vidFeed[i].style.height = "100%";
+                    if (i == 0){
+                        vidFeed[i].style.borderTopLeftRadius = "10px";
+                        vidFeed[i].style.borderBottomLeftRadius = "10px";
+                        vidFeed[i].style.borderTopRightRadius = "0px";
+                        vidFeed[i].style.borderBottomRightRadius = "0px";
+                        vidFeed[i].style.borderRight = "1px solid aquamarine";
+                    }else{
+                        vidFeed[i].style.borderTopLeftRadius = "0px";
+                        vidFeed[i].style.borderBottomLeftRadius = "0px";
+                        vidFeed[i].style.borderTopRightRadius = "10px";
+                        vidFeed[i].style.borderBottomRightRadius = "10px";
+                        vidFeed[i].style.borderRight = "1px solid aquamarine";
+                    }
+                    continue;
+                }else if (y == 6 & i > 1){
+                    vidFeed[i].style.display = "block";
+                    vidFeed[i].style.width = "50%";
+                    vidFeed[i].style.height = "100%";
+                    if (i == 2){
+                        vidFeed[i].style.borderTopLeftRadius = "10px";
+                        vidFeed[i].style.borderBottomLeftRadius = "10px";
+                        vidFeed[i].style.borderTopRightRadius = "0px";
+                        vidFeed[i].style.borderBottomRightRadius = "0px";
+                        vidFeed[i].style.borderRight = "1px solid aquamarine";
+                    }else{
+                        vidFeed[i].style.borderTopLeftRadius = "0px";
+                        vidFeed[i].style.borderBottomLeftRadius = "0px";
+                        vidFeed[i].style.borderTopRightRadius = "10px";
+                        vidFeed[i].style.borderBottomRightRadius = "10px";
+                        vidFeed[i].style.borderRight = "1px solid aquamarine";
+                    }
+                    continue;
+                }else if (y == 7){
+                    vidFeed[i].style.display = "block";
+                    vidFeed[i].style.width = "50%";
+                    vidFeed[i].style.height = "50%";
+                    if (i == 0){
+                        vidFeed[i].style.borderTopLeftRadius = "10px";
+                        vidFeed[i].style.borderBottomLeftRadius = "0px";
+                        vidFeed[i].style.borderTopRightRadius = "0px";
+                        vidFeed[i].style.borderBottomRightRadius = "0px";
+                        vidFeed[i].style.borderRight = "1px solid aquamarine";
+                        vidFeed[i].style.borderBottom = "1px solid aquamarine";   
+                    }
+                    else if (i == 1){
+                        vidFeed[i].style.borderTopLeftRadius = "0px";
+                        vidFeed[i].style.borderBottomLeftRadius = "00px";
+                        vidFeed[i].style.borderTopRightRadius = "10px";
+                        vidFeed[i].style.borderBottomRightRadius = "0px";
+                        vidFeed[i].style.borderLeft = "1px solid aquamarine";
+                        vidFeed[i].style.borderBottom = "1px solid aquamarine";  
+                    }
+                    else if (i == 2){
+                        vidFeed[i].style.borderTopLeftRadius = "0px";
+                        vidFeed[i].style.borderBottomLeftRadius = "10px";
+                        vidFeed[i].style.borderTopRightRadius = "0px";
+                        vidFeed[i].style.borderBottomRightRadius = "0px";
+                        vidFeed[i].style.borderRight = "1px solid aquamarine";
+                        vidFeed[i].style.borderTop = "1px solid aquamarine";   
+                    }
+                    else if (i == 3){
+                        vidFeed[i].style.border = "1px";
+                        vidFeed[i].style.borderTopLeftRadius = "0px";
+                        vidFeed[i].style.borderBottomLeftRadius = "0px";
+                        vidFeed[i].style.borderTopRightRadius = "0px";
+                        vidFeed[i].style.borderBottomRightRadius = "10px";
+                        vidFeed[i].style.borderLeft = "1px solid aquamarine";
+                        vidFeed[i].style.borderTop = "1px solid aquamarine";  
+                    }
+                    continue;
+                }
+                vidFeed[i].style.display = "none";
+            }
+    }
+</script>
+{% endblock %}

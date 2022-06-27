@@ -1,0 +1,60 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %}
+
+{% block relative_css %}
+<link rel="stylesheet" href="..\static\form.css">
+{% endblock %}
+
+{% block content %}
+<div class="alertcon" style="display: block">
+    {% if user.is_authenticated %}
+    <div class="alert success">
+        Logged in successfully!
+      <span class="closebtn">&times;</span>
+    </div>
+    {% else %}
+    <div class="alert">
+        Invalid account!
+      <span class="closebtn">&times;</span>
+    </div>
+    {% endif %}
+</div>
+
+<div class="form_div">
+    <form method="POST">
+    <h3 align="center">Login</h3>
+    <div class = "from-group">
+        <label for="email">Email Address</label>
+        <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Enter email">
+    </div>
+
+    <div class = "from-group">
+        <label for="password">Password</label>
+        <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Enter Password">
+    </div>
+    <button type="submit" class="submit_btn">Login</button>
+    </form>
+</div>
+<script>
+
+var close = document.getElementsByClassName("closebtn");
+var i;
+
+for (i = 0; i < close.length; i++) {
+  close[i].onclick = function(){
+    var div = this.parentElement;
+    div.style.opacity = "0";
+    setTimeout(function(){ div.style.display = "none"; }, 600);
+  }
+}
+</script>
+{% endblock %}
